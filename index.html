@@ -23,25 +23,73 @@ th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; ver
 th { background: var(--panel); color: var(--gold-light); }
 .card { background: rgba(10,58,40,.75); border: 1px solid var(--line); border-radius: 16px; padding: 20px; margin: 16px 0; }
 .links a { display: inline-block; margin: 6px 12px 6px 0; }
+.lang-switch { margin-left: auto; min-width: 44px; height: 36px; padding: 0 12px; border: 1px solid rgba(240,189,69,.55);
+  border-radius: 999px; background: transparent; color: var(--gold-light); font: inherit; font-size: 14px; font-weight: 700;
+  letter-spacing: .06em; cursor: pointer; }
+.lang-switch:hover, .lang-switch:focus-visible { background: rgba(240,189,69,.14); outline: none; }
+.slogan { color: var(--gold-light); font-weight: 700; letter-spacing: .02em; }
+[hidden] { display: none !important; }
 footer { margin-top: 48px; color: var(--dim); font-size: .9rem; }
 @media (max-width: 520px) { body { font-size: 16px; } th, td { padding: 6px; } }
 </style>
 </head>
 <body>
 <main>
-<header><img src="icon.png" alt=""><a href="./">JACI GAMES</a></header>
+<header><img src="icon.png" alt=""><a href="./">JACI GAMES</a><button class="lang-switch" id="lang-switch" type="button" hidden></button></header>
 
+<!-- Two languages (2026-11-27): the browser picks (Portuguese -> pt-BR, any other -> English)
+     until the button is used; without JavaScript both versions show, English first. -->
+<div lang="en">
+<h1>Jaci Games</h1>
+<p>An indie game studio from Brazil, making casual games.</p>
+<div class="card">
+<h2>Poker Cascade</h2>
+<p class="slogan">Drop a card. Unleash the cascade.</p>
+<p>A card puzzle game. Line up poker hands on the board and watch the cards cascade. Coming soon to Google Play.</p>
+<p class="links"><a href="privacy.html">Privacy Policy</a><a href="privacidade.html">Política de Privacidade (português)</a></p>
+</div>
+<p>Contact: <a href="mailto:jaci.gamesstudio@gmail.com">jaci.gamesstudio@gmail.com</a></p>
+</div>
 
+<div lang="pt-BR">
 <h1>Jaci Games</h1>
 <p>Estúdio independente brasileiro de jogos casuais.</p>
 <div class="card">
 <h2>Poker Cascade</h2>
 <p>Um quebra-cabeça de cartas: monte mãos de pôquer nas linhas da mesa e faça as cartas caírem em cascata. Em breve na Google Play.</p>
-<p class="links"><a href="privacidade.html">Política de Privacidade</a><a href="privacy.html">Privacy Policy</a></p>
+<p class="links"><a href="privacidade.html">Política de Privacidade</a><a href="privacy.html">Privacy Policy (English)</a></p>
 </div>
 <p>Contato: <a href="mailto:jaci.gamesstudio@gmail.com">jaci.gamesstudio@gmail.com</a></p>
+</div>
 
-<footer>Jaci Games · <a href="mailto:jaci.gamesstudio@gmail.com">jaci.gamesstudio@gmail.com</a></footer>
+<footer>Jaci Games · PLAY · STRATEGY · BEYOND · <a href="mailto:jaci.gamesstudio@gmail.com">jaci.gamesstudio@gmail.com</a></footer>
 </main>
+<script>
+(function () {
+  var KEY = 'jaciGamesLanguage';
+  var saved = '';
+  try { saved = localStorage.getItem(KEY) || ''; } catch (err) {}
+  var browser = String((navigator.languages && navigator.languages[0]) || navigator.language || '').toLowerCase();
+  var language = saved === 'en' || saved === 'pt-BR' ? saved : (browser.indexOf('pt') === 0 ? 'pt-BR' : 'en');
+  var button = document.getElementById('lang-switch');
+  function show() {
+    document.documentElement.lang = language;
+    document.title = 'Jaci Games';
+    var blocks = document.querySelectorAll('main > div[lang]');
+    for (var i = 0; i < blocks.length; i++) {
+      blocks[i].hidden = blocks[i].getAttribute('lang') !== language;
+    }
+    button.textContent = language === 'en' ? 'PT' : 'EN';
+    button.setAttribute('aria-label', language === 'en' ? 'Mudar para português' : 'Switch to English');
+    button.hidden = false;
+  }
+  button.addEventListener('click', function () {
+    language = language === 'en' ? 'pt-BR' : 'en';
+    try { localStorage.setItem(KEY, language); } catch (err) {}
+    show();
+  });
+  show();
+}());
+</script>
 </body>
 </html>
